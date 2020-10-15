@@ -1,20 +1,25 @@
-import { getRepository } from 'typeorm';
 import path from 'path';
 import fs from 'fs';
+import { injectable, inject } from 'tsyringe';
 
-import User from '../models/User';
-import uploadConfig from '../config/upload';
-import AppError from '../errors/AppError';
+import uploadConfig from '@config/upload';
+import AppError from '@shared/errors/AppError';
+import User from '../infra/typeorm/entities/User';
+import IUserRepository from '../repositories/IUsersRepositories';
 
 interface Request {
     user_id: string;
     avatarFileName: string;
 }
+@injectable()
 class UpdateUserAvatarService {
-    public async execute({ user_id, avatarFileName }: Request): Promise<User> {
-        const userRepository = getRepository(User);
+    constructor(
+        @inject('UsersRepository')
+        private usersRepository: IUserRepository,
+    ) {}
 
-        const user = await userRepository.findOne(user_id);
+    public async execute({ user_id, avatarFileName }: Request): Promise<User> {
+        const user = await this.usersRepository.findByID(user_id);
 
         if (!user) {
             throw new AppError(
@@ -36,7 +41,7 @@ class UpdateUserAvatarService {
         }
         user.avatar = avatarFileName;
 
-        await userRepository.save(user);
+        await this.usersRepository.save(user);
 
         return user;
     }
