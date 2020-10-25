@@ -7,6 +7,7 @@ import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import CreateUserService from './CreateUserService';
 
 describe('AuthenticanteUser', () => {
+    beforeEach(() => {});
     it('should be able to authenticate', async () => {
         const fakeUserRepository = new FakeUserRepository();
         const fakeHashProvider = new FakeHashProvider();
