@@ -7,6 +7,6 @@ const profileRouter = Router();
 profileRouter.use(ensureAuthenticated);
 
 profileRouter.get('/', profileControllers.show);
-profileRouter.put('/', profileControllers.update);
+profileRouter.put('/', profileControllers.passwordupdate);
 
 export default profileRouter;
